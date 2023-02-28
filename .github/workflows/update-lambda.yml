@@ -14,7 +14,10 @@ on:
         description: "Deploy to production"
         required: true
         default: prod
-
+  workflow_run:
+    workflows: ["secret-detection"]
+    types:
+      - completed
 
 
 jobs:

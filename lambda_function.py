@@ -7,7 +7,7 @@ def logToTelegram(event, message):
     today = datetime.now()
     params = {'chat_id': '88212345', 'text': f"```\n-[{event}][{today}]:{message}```", "parse_mode":"MarkdownV2"}
     query =  urllib.parse.urlencode(params, safe='')
-    readUrl = f"https://api.telegram.org/bot***REMOVED***/sendMessage?{query}"
+    readUrl = f"https://api.telegram.org/bot{os.environ['telegram_bot']}/sendMessage?{query}"
 
     res = requests.request("GET", readUrl, headers=headers)
 
@@ -219,9 +219,9 @@ def isTokenUnique(databaseId, headers, username, token):
 
 
 def updateListStatus(event, context):   
-    # token = '***REMOVED***'
+    # token = '**RMOMOVED**'
 
-    # databaseId = '***REMOVED***'
+    # databaseId = '**RMOMOVED**'
     
     # headers = {
     #     "Authorization": "Bearer " + token,
@@ -249,9 +249,9 @@ def updateListStatus(event, context):
             'body': json.dumps({"message":"Success"})
     };
 
-token = '***REMOVED***'
+token = os.environ['notion_token']
 
-databaseId = '***REMOVED***'
+databaseId = os.environ['notion_db_id']
 
 headers = {
     "Authorization": "Bearer " + token,
