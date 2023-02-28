@@ -25,8 +25,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: deploy us-east-1
+          aws-region: us-east-2
+      - name: deploy us-east-2
         run: |
           zip -r GithubToken.zip .
           aws lambda update-function-code --function-name=GithubToken --zip-file=fileb://GithubToken.zip 
