@@ -2,9 +2,12 @@ name: Deploy manager lambda Runner
 
 on:
   push:
-    branches:
-      - main
   pull_request:
+    branches: [ main ]
+    types:
+      - closed
+    paths:
+      - '**.py'
   workflow_dispatch:
     inputs:
       environment:
@@ -15,7 +18,8 @@ on:
 
 
 jobs:
-  deploy_lambda:
+  deploy_lambda_on_master:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -35,4 +39,3 @@ jobs:
         run: |
           zip -r GithubToken.zip .
           aws lambda update-function-code --function-name=GithubToken --zip-file=fileb://GithubToken.zip 
-      
