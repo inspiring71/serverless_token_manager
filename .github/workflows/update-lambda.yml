@@ -1,0 +1,33 @@
+name: Deploy manager lambda Runner
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy to production"
+        required: true
+        default: prod
+
+
+jobs:
+  deploy_lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: deploy us-east-1
+        run: |
+          zip -r GithubToken.zip .
+          aws lambda update-function-code --function-name=GithubToken --zip-file=fileb://GithubToken.zip 
+      
