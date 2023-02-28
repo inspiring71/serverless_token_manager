@@ -12,13 +12,14 @@ on:
         required: true
         default: prod
 
-permissions:
-  id-token: write
-  contents: read
+
 
 jobs:
   deploy_lambda:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -27,7 +28,7 @@ jobs:
       - name: Configure AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ***REMOVED*** #${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
           role-session-name: deploy-lambda
           aws-region: us-east-2
       - name: deploy us-east-2
