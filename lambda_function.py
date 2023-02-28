@@ -7,7 +7,7 @@ def logToTelegram(event, message):
     today = datetime.now()
     params = {'chat_id': '88212345', 'text': f"```\n-[{event}][{today}]:{message}```", "parse_mode":"MarkdownV2"}
     query =  urllib.parse.urlencode(params, safe='')
-    readUrl = f"https://api.telegram.org/bot{os.environ['telegram_bot']}/sendMessage?{query}"
+    readUrl = f"https://api.telegram.org/bot***REMOVED***/sendMessage?{query}"
 
     res = requests.request("GET", readUrl, headers=headers)
 
@@ -249,9 +249,9 @@ def updateListStatus(event, context):
             'body': json.dumps({"message":"Success"})
     };
 
-token = os.environ['notion_token']
+token = '***REMOVED***'
 
-databaseId = os.environ['notion_db_id']
+databaseId = '***REMOVED***'
 
 headers = {
     "Authorization": "Bearer " + token,
@@ -276,29 +276,29 @@ def lambda_handler(event, context):
         logToTelegram("Add Token", f"Adding new token\n input:{json.dumps(event['body'])}")
         info = json.loads(event['body'])
         print('info', info)
-        try:
-            tokenNotExist = isTokenUnique(databaseId, headers, info['username'],info['token'])
-            if not tokenNotExist:
-                return {"statusCode":400, "body":{"message": "Token already Exist"}}
-                
-            tokenIsValid = isTokenValid(info['username'],info['token'])
-            logToTelegram("Add Token",f"Validation:{tokenIsValid}")
-            if not tokenIsValid:
-                return {"statusCode":400, "body":{"message": "Token is not valid"}}
-                
-            info['expireAt']=tokenIsValid
-            logToTelegram("Add Token",f"Token Validated:({info['username']},{info['token']})")
+        # try:
+        tokenNotExist = isTokenUnique(databaseId, headers, info['username'],info['token'])
+        if not tokenNotExist:
+            return {"statusCode":400, "body":{"message": "Token already Exist"}}
+            
+        tokenIsValid = isTokenValid(info['username'],info['token'])
+        logToTelegram("Add Token",f"Validation:{tokenIsValid}")
+        if not tokenIsValid:
+            return {"statusCode":400, "body":{"message": "Token is not valid"}}
+            
+        info['expireAt']=tokenIsValid
+        logToTelegram("Add Token",f"Token Validated:({info['username']},{info['token']})")
 
-            record = createPage(databaseId,headers, info)
-            # database = get_db_schema(databaseId,headers)
-            if record['id']:
-                logToTelegram("Add Token",f"Add successfully!")
-                return {"statusCode":200, "body":{"message": "Success"}}
-                    
-        except Exception as e:
-            print(e)
-            logToTelegram("error",f"Add token failed!")
-            pass
+        record = createPage(databaseId,headers, info)
+        # database = get_db_schema(databaseId,headers)
+        if record['id']:
+            logToTelegram("Add Token",f"Add successfully!")
+            return {"statusCode":200, "body":{"message": "Success"}}
+                
+        # except Exception as e:
+        #     print(e)
+        #     logToTelegram("error",f"Add token failed!")
+        #     pass
         return {"statusCode":500,  "body":{"message": "Failure"}}
     else:
         logToTelegram("list token",f"List tokens started!")
