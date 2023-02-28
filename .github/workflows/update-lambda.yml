@@ -1,4 +1,4 @@
-name: Deploy Website to S3
+name: Deploy manager lambda Runner
 
 on:
   push:
@@ -23,6 +23,7 @@ on:
 
 jobs:
   deploy_lambda_on_master:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       id-token: write
